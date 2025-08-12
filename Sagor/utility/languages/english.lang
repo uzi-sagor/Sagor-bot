@@ -20,25 +20,7 @@ main.failedEvnt=failed to load %1 wrong format
 main.evNameExist=the event %1 is already loaded
 
 main.successLogin=logged in %1 file
-main.loadingLogin=\n░██████╗░█████╗░░██████╗░░█████╗░██████╗░
-██╔════╝██╔══██╗██╔════╝░██╔══██╗██╔══██╗
-╚█████╗░███████║██║░░██╗░██║░░██║██████╔╝
-░╚═══██╗██╔══██║██║░░╚██╗██║░░██║██╔══██╗
-██████╔╝██║░░██║╚██████╔╝╚█████╔╝██║░░██║
-╚═════╝░╚═╝░░╚═╝░╚═════╝░░╚════╝░╚═╝░░╚═╝\n\n
-╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮
-┃ ★彡[𝙋𝙍𝙊𝙁𝙄𝙇𝙀 𝘾𝘼𝙍𝘿 ]彡★ ┃
-┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
-┃ 𝗡𝗮𝗺𝗲      : JAHIDUL ISLAM SAGOR┃
-┃
-┃━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┃
-┃ 𝙁𝙖𝙘𝙚𝙗𝙤𝙤𝙠   : https://fb.com/SAGOR.DJK.FORYOU┃
-┃ 𝙂𝙞𝙩𝙃𝙪𝙗     : https://github.com/SaGorbot009 ┃
-┃ 𝙏𝙞𝙠𝙏𝙤𝙠     : https://www.tiktok.com/@11sagor_islam┃
-┃ 𝙏𝙚𝙡𝙚𝙜𝙧𝙖𝙢   : https://t.me/xxSaGorxx┃
-┃
-┃ Bot create by SaGor & Fca fixed by ArYan 
-╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯
+main.loadingLogin=‎ᶦϻᷟ། 𝆺𝅥𝆺𝅥 ≛⃝🐼🆂🅰🅶🅾🆁⛦⃕‌🍁 𝆺𝅥𝆺𝅥🐇‌‌᭄
 main.appstateEmpty=appstate file "%1" is empty, removing it
 main.loggingIn=logging in %1 file
 main.loginErr=error processing appstate %1, error %2
@@ -105,8 +87,8 @@ handleCommandEvent.moduleError=Having some unexpected error when using command %
 
 # includes/handle/handleCreateDatabase.js
 
-handleCreateDatabase.newThread=\nSagor - new group detected %1.
-handleCreateDatabase.newUser=\nSagor - new user detected %1.
+handleCreateDatabase.newThread=\n‎ᶦϻᷟ། 𝆺𝅥𝆺𝅥 ≛⃝🐼🆂🅰🅶🅾🆁⛦⃕‌🍁 𝆺𝅥𝆺𝅥🐇‌‌᭄ - new group detected %1.
+handleCreateDatabase.newUser=\n‎ᶦϻᷟ། 𝆺𝅥𝆺𝅥 ≛⃝🐼🆂🅰🅶🅾🆁⛦⃕‌🍁 𝆺𝅥𝆺𝅥🐇‌‌᭄ - new user detected %1.
 
 # includes/handle/handleEvent.js
 

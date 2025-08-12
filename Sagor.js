@@ -62,7 +62,7 @@ global.editBots = require("./Sagor/system/editconfig.js");
 console.clear();
 console.log(chalk.blue('LOADING MAIN SYSTEM'));
 app.use(express.json());
-app.use(express.static('public/main'));
+app.use(express.static('./Sagor/public/main'));
 
 async function logOut(res, botId) {
     try {
@@ -100,7 +100,7 @@ app.post('/profile', async (req, res) => {
         const admins = data.admins.length;
         return res.send({ name, uid, thumbSrc, profileUrl, botname, botprefix, admins });
     } catch (err) {
-        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+        return res.status(401).sendFile(path.join(__dirname, './Sagor/public/notFound.html'));
     }
 });
 
@@ -164,22 +164,22 @@ app.get('/profile', (req, res) => {
     const botinfo = require('./bots.json');
 
     if (!token || !botid) {
-        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+        return res.status(401).sendFile(path.join(__dirname, './Sagor/public/notFound.html'));
     }
 
     try {
         const verifyToken = botinfo.find(i => i.uid == botid).token;
         if (verifyToken !== token) {
-            return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+            return res.status(401).sendFile(path.join(__dirname, './Sagor/public/notFound.html'));
         }
         jwt.verify(token, botid, (err, decoded) => {
             if (err) {
-                return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+                return res.status(401).sendFile(path.join(__dirname, './Sagor/public/notFound.html'));
             }
-            res.sendFile(path.join(__dirname, 'public/profile.html'));
+            res.sendFile(path.join(__dirname, './Sagor/public/profile.html'));
         });
     } catch (err) {
-        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+        return res.status(401).sendFile(path.join(__dirname, './Sagor/public/notFound.html'));
     }
 });
 
@@ -236,7 +236,7 @@ app.get('/info', (req, res) => {
 });
 
 app.use((req, res) => {
-    res.status(500).sendFile(path.join(__dirname, 'public/notFound.html'));
+    res.status(500).sendFile(path.join(__dirname, './Sagor/public/notFound.html'));
 });
 
 app.listen(port);
@@ -554,7 +554,7 @@ async function startLogin(appstate, callback) {
 
             try {
                 const listenerData = { api, models: botModel };
-                global.custom = require('./custom.js')({ api });
+                global.custom = require('./Sagor/SaGor/custom.js')({ api });
                 const listener = require('./Sagor/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
@@ -707,7 +707,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
 
             try {
                 const listenerData = { api, models: botModel };
-                global.custom = require('./custom.js')({ api });
+                global.custom = require('./Sagor/SaGor/custom.js')({ api });
                 const listener = require('./Sagor/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {

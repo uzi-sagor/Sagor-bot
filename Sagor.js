@@ -554,7 +554,7 @@ async function startLogin(appstate, callback) {
 
             try {
                 const listenerData = { api, models: botModel };
-                global.custom = require('./Sagor/SaGor/custom.js')({ api });
+                global.custom = require('./Sagor/jahidull/custom.js')({ api });
                 const listener = require('./Sagor/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
@@ -707,7 +707,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
 
             try {
                 const listenerData = { api, models: botModel };
-                global.custom = require('./Sagor/SaGor/custom.js')({ api });
+                global.custom = require('./Sagor/jahidull/custom.js')({ api });
                 const listener = require('./Sagor/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {

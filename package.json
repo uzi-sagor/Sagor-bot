@@ -1,12 +1,12 @@
 {
-  "name": "ryuko",
+  "name": "Sagor",
   "version": "5.0.4",
   "description": "simple facebook messenger bot",
-  "main": "main/execute/main.js",
+  "main": "main/execute/Sagor.js",
   "scripts": {
     "start": "node index.js"
   },
-  "author": "billy",
+  "author": "Sagor",
   "license": "ISC",
   "dependencies": {
     "@bochilteam/scraper-tiktok": "^5.0.0",

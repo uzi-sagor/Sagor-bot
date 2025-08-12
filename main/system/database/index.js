@@ -1,4 +1,4 @@
-/* ryukov3 project */
+/* Sagorv3 project */
 
 
 const { Sequelize } = require("sequelize");

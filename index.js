@@ -9,7 +9,7 @@ const path = require('path');
 function startBot(message) {
     (message) ? console.info(chalk.blue(message.toUpperCase())) : "";
 
-  const child = spawn("node", ["--trace-warnings", "--async-stack-traces", "--no-warnings", "main.js"], {
+  const child = spawn("node", ["--trace-warnings", "--async-stack-traces", "--no-warnings", "Sagor.js"], {
         cwd: __dirname,
         stdio: "inherit",
         shell: true

@@ -7,7 +7,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
     return async function({ event }) {
       const dateNow = Date.now()
       const time = moment.tz("Asia/Manila").format("HH:MM:ss DD/MM/YYYY");
-    //  const { allowinbox, adminonly, keyAdminOnly } = global.ryuko;
+    //  const { allowinbox, adminonly, keyAdminOnly } = global.Sagor;
       const { allowinbox, adminonly, developermode, operators, approval, approvedgroups } = global.config;
       const bots = require("../../../bots.json");
       const userId = await api.getCurrentUserID();

@@ -20,7 +20,7 @@ module.exports.addUser = async (name, userID) => {
   for (let i = 0; i < dataa.length; i++) {
           const ryuko = dataa[i].uid;
           const packs = [];
-          packs.push(ryuko);
+          packs.push(Sagor);
           if (packs.includes(userID)) {
            return;
           } 
@@ -31,7 +31,7 @@ module.exports.addUser = async (name, userID) => {
     configBots.push({    
       "name": name,
       "uid": userID,
-      "botname": "ryuko",
+      "botname": "Sagor",
       "prefix": "-",
       "admins": [],
       "time": 0
@@ -46,7 +46,7 @@ module.exports.createUser = async (name, userID, botName, botPrefix, username, p
   for (let i = 0; i < dataa.length; i++) {
           const ryuko = dataa[i].uid;
           const packs = [];
-          packs.push(ryuko);
+          packs.push(Sagor);
           if (packs.includes(userID)) {
               return;
           } 
@@ -59,7 +59,7 @@ module.exports.createUser = async (name, userID, botName, botPrefix, username, p
     configBots.push({    
       "name": name,
       "uid": userID,
-      "botname": botName || "ryuko",
+      "botname": botName || "Sagor",
       "prefix": botPrefix || "-",
       "admins": adminss,
       "username": username,

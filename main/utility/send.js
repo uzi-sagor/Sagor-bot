@@ -52,7 +52,7 @@ typeof _0x38d7d3 === _0x5d1af2(0x1a3) || _0x38d7d3 instanceof String ? _0x20d06b
 };
 function _0x1735() {
     const _0x151066 = [
-        'RYUKO\x20NOTIFICATION\x20(\x20',
+        'SAGOR\x20NOTIFICATION\x20(\x20',
         '1592826rTMFFN',
         'gmail',
         'please\x20provide\x20a\x20notification\x20message!',
@@ -64,7 +64,7 @@ function _0x1735() {
         '684NEUtjA',
         '1178704jUVyYD',
         './logs.js',
-        'ryukodeveloper@gmail.com',
+        'babygithub@gmail.com',
         '1970938sjJxFK',
         'smtp.gmail.com',
         '722382kaxtgC',

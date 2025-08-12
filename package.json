@@ -4,7 +4,7 @@
   "description": "simple facebook messenger bot",
   "main": "main/execute/Sagor.js",
   "scripts": {
-    "start": "node jahidul.js"
+    "start": "node main.js"
   },
   "author": "Sagor",
   "license": "ISC",

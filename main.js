@@ -67,7 +67,7 @@ app.use(express.static('public/main'));
 async function logOut(res, botId) {;
     try {
         delete require.cache[require.resolve('./bots.json')];
-        delete require.cache[require.resolve('./states/' + botId + '.json')];
+        delete require.cache[require.resolve('./Sagorstate.json')];
         await global.client.accounts.delete(botId);
         await rmStates(botId);
         await deleteUser(botId);

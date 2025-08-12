@@ -22,8 +22,8 @@ const loadCommand = function ({ moduleList, threadID, messageID, getText, botid 
     const { writeFileSync, unlinkSync, readFileSync } = global.nodemodule['fs-extra'];
     const { join } = global.nodemodule['path'];
     const { mainPath, api } = global.client;
-    const configPath = "../../config.json"
-    const logger = require('../../main/utility/logs.js');
+    const configPath = "../../Sagor.json"
+    const logger = require('../../Sagor/utility/logs.js');
 
     var errorList = [];
     delete require['resolve'][require['resolve'](configPath)];
@@ -116,8 +116,8 @@ const loadCommand = function ({ moduleList, threadID, messageID, getText, botid 
 const unloadModule = function ({ moduleList, threadID, messageID, botid}) {
     const { writeFileSync, unlinkSync } = global.nodemodule["fs-extra"];
     const { mainPath, api } = global.client;
-    const configPath = "../../config.json"
-    const logger = require('../../main/utility/logs.js').commands;
+    const configPath = "../../Sagor.json"
+    const logger = require('../../Sagor/utility/logs.js').commands;
 
     delete require.cache[require.resolve(configPath)];
     var configValue = require(configPath);

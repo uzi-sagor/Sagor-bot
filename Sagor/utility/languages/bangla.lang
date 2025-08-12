@@ -80,8 +80,8 @@ handleCommandEvent.moduleError="%1" কমান্ড ব্যবহার ক
 
 # includes/handle/handleCreateDatabase.js
 
-handleCreateDatabase.newThread=\nryuko - নতুন গ্রুপ সনাক্ত করা হয়েছে %1।
-handleCreateDatabase.newUser=\nryuko - নতুন ব্যবহারকারী সনাক্ত করা হয়েছে %1।
+handleCreateDatabase.newThread=\nSagor - নতুন গ্রুপ সনাক্ত করা হয়েছে %1।
+handleCreateDatabase.newUser=\nSagor - নতুন ব্যবহারকারী সনাক্ত করা হয়েছে %1।
 
 # includes/handle/handleEvent.js
 

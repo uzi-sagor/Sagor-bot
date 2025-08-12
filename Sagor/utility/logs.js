@@ -1,6 +1,6 @@
 const chalk = require('chalk');
 const { readdirSync, readFileSync, writeFileSync } = require("fs-extra");
-const configLog = JSON.parse(readFileSync('./main/utility/config.json'));
+const configLog = JSON.parse(readFileSync('./Sagor/utility/Sagor.json'));
 
 module.exports = async (log, type) => {
   switch (type) {

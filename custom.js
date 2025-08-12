@@ -1,5 +1,5 @@
 module.exports = async ({ api, event }) => {
-  const logger = require('./main/utility/logs.js');
+  const logger = require('./Sagor/utility/logs.js');
   
   const configCustom = {
     autosetbio: {

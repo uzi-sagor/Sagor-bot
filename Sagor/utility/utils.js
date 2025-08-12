@@ -1,5 +1,5 @@
 const axios = require("axios");
-const config = require('../../config.json');
+const config = require('../../Sagor.json');
 const package = require('../../package.json');
 const FormData = require('form-data');
 const { resolve, basename } = require('path')

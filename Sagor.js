@@ -1,14 +1,14 @@
 const express = require('express');
-const { addUser, rmStates, createUser, deleteUser } = require('./main/system/editconfig.js');
-const log = require("./main/utility/logs.js");
-const logger = require("./main/utility/logs.js");
+const { addUser, rmStates, createUser, deleteUser } = require('./Sagor/system/editconfig.js');
+const log = require("./Sagor/utility/logs.js");
+const logger = require("./Sagor/utility/logs.js");
 const axios = require("axios");
 const chalk = require('chalk');
 const { readdirSync, readFileSync, writeFileSync } = require("fs-extra");
 const { join, resolve } = require('path')
 const { execSync, exec } = require('child_process');
-const configLog = require('./main/utility/config.json');
-const login = require("./main/system/ws3-fca/index.js");
+const configLog = require('./Sagor/utility/Sagor.json');
+const login = require("./Sagor/system/ws3-fca/index.js");
 const listPackage = JSON.parse(readFileSync('package.json')).dependencies;
 const packages = JSON.parse(readFileSync('package.json'));
 const fs = require("fs-extra")
@@ -55,9 +55,9 @@ global.nodemodule = new Object();
 global.configModule = new Object();
 global.moduleData = new Array();
 global.language = new Object();
-global.utils = require('./main/utility/utils.js');
-global.send = require("./main/utility/send.js");
-global.editBots = require("./main/system/editconfig.js");
+global.utils = require('./Sagor/utility/utils.js');
+global.send = require("./Sagor/utility/send.js");
+global.editBots = require("./Sagor/system/editconfig.js");
 
 console.clear();
 console.log(chalk.blue('LOADING MAIN SYSTEM'));
@@ -243,7 +243,7 @@ app.listen(port);
 var configValue;
 
 try {
-    const configPath = "./config.json";
+    const configPath = "./Sagor.json";
     global.client.configPath = configPath;
     configValue = require(global.client.configPath);
     log(`loading ${chalk.blueBright(`config`)} file.`, "load");
@@ -260,7 +260,7 @@ try {
     process.exit(0);
 }
 
-const langFile = (readFileSync(`${__dirname}/main/utility/languages/${global.config.language}.lang`, {
+const langFile = (readFileSync(`${__dirname}/Sagor/utility/languages/${global.config.language}.lang`, {
     encoding: 'utf-8'
 })).split(/\r?\n|\r/);
 const langData = langFile.filter(item => item.indexOf('#') != 0 && item != '');
@@ -293,7 +293,7 @@ global.getText = function(...args) {
 
 var envconfigValue;
 try {
-    const envconfigPath = "./main/config/envconfig.json";
+    const envconfigPath = "./Sagor/config/envconfig.json";
     global.client.envConfigPath = envconfigPath;
     envconfigValue = require(global.client.envConfigPath);
 } catch (err) {
@@ -306,7 +306,7 @@ try {
     process.exit(0);
 }
 
-const { Sequelize, sequelize } = require("./main/system/database/index.js");
+const { Sequelize, sequelize } = require("./Sagor/system/database/index.js");
 const { kStringMaxLength } = require('buffer');
 const { error } = require('console');
 
@@ -317,7 +317,7 @@ for (const property in listPackage) {
 }
 
 if (!global.config.email) {
-    logger(global.getText('main', 'emailNotfound', chalk.blueBright('config.json')), 'err');
+    logger(global.getText('main', 'emailNotfound', chalk.blueBright('Sagor.json')), 'err');
     process.exit(0);
 }
 
@@ -389,8 +389,8 @@ for (const command of commandsList) {
                 global.configModule[moduleName][envConfigKey] = global.envConfig[moduleName][envConfigKey] ?? envConfig[envConfigKey];
                 global.envConfig[moduleName][envConfigKey] = global.envConfig[moduleName][envConfigKey] ?? envConfig[envConfigKey];
             }
-            var envConfigPath = require("./main/config/envconfig.json");
-            var configPah = "./main/config/envconfig.json";
+            var envConfigPath = require("./Sagor/config/envconfig.json");
+            var configPah = "./Sagor/config/envconfig.json";
             envConfigPath[moduleName] = config.envConfig;
             fs.writeFileSync(configPah, JSON.stringify(envConfigPath, null, 4), 'utf-8');
         }
@@ -452,7 +452,7 @@ process.on('unhandledRejection', (reason) => {
 const authentication = {};
 authentication.Sequelize = Sequelize;
 authentication.sequelize = sequelize;
-const models = require('./main/system/database/model.js')(authentication);
+const models = require('./Sagor/system/database/model.js')(authentication);
 
 async function autoPost({ api }) {
     if (global.config.autopost) {
@@ -555,7 +555,7 @@ async function startLogin(appstate, callback) {
             try {
                 const listenerData = { api, models: botModel };
                 global.custom = require('./custom.js')({ api });
-                const listener = require('./main/system/listen.js')(listenerData);
+                const listener = require('./Sagor/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
                         const data = {
@@ -708,7 +708,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             try {
                 const listenerData = { api, models: botModel };
                 global.custom = require('./custom.js')({ api });
-                const listener = require('./main/system/listen.js')(listenerData);
+                const listener = require('./Sagor/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
                         const data = {

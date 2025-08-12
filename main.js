@@ -59,12 +59,12 @@ global.utils = require('./main/utility/utils.js');
 global.send = require("./main/utility/send.js");
 global.editBots = require("./main/system/editconfig.js");
 
-
 console.clear();
 console.log(chalk.blue('LOADING MAIN SYSTEM'));
 app.use(express.json());
 app.use(express.static('public/main'));
-async function logOut(res, botId) {;
+
+async function logOut(res, botId) {
     try {
         delete require.cache[require.resolve('./bots.json')];
         delete require.cache[require.resolve('./Sagorstate.json')];
@@ -72,7 +72,7 @@ async function logOut(res, botId) {;
         await rmStates(botId);
         await deleteUser(botId);
         var data = `logged out ${botId} successfully`;
-        res.send({data});
+        res.send({ data });
     } catch (err) {
         var error = `can't logged out bot ${botId}, maybe the bot is not logged in.`;
         return res.status(400).send(botId);
@@ -83,7 +83,8 @@ app.get('/commands', (req, res) => {
     const commands = global.client.commands;
     const command = Array.from(commands.values());
     res.json(command);
-})
+});
+
 app.post('/profile', async (req, res) => {
     try {
         delete require.cache[require.resolve('./bots.json')];
@@ -97,11 +98,11 @@ app.post('/profile', async (req, res) => {
         const botname = data.botname;
         const botprefix = data.prefix;
         const admins = data.admins.length;
-        return res.send({name, uid, thumbSrc, profileUrl, botname, botprefix, admins});
+        return res.send({ name, uid, thumbSrc, profileUrl, botname, botprefix, admins });
     } catch (err) {
         return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
     }
-})
+});
 
 app.post('/logout', async (req, res) => {
     const { botid } = req.body;
@@ -113,18 +114,20 @@ app.post('/configure', async (req, res) => {
     const botPath = "bots.json";
     const botChanges = JSON.parse(fs.readFileSync(botPath, 'utf-8'));
     const pointDirect = botChanges.find(i => i.uid == botId);
+
     async function editDetails(where, value) {
         pointDirect[where] = value;
         try {
             await fs.writeFileSync(botPath, JSON.stringify(botChanges, null, 2));
             delete require.cache[require.resolve('./bots.json')];
             var data = `edited ${where} successfully.`;
-            return res.send({data})
+            return res.send({ data });
         } catch (err) {
             var error = `failed to edit ${where}`;
-            return res.status(400).send({error});
+            return res.status(400).send({ error });
         }
     }
+
     async function addAdmin(value) {
         const edit = pointDirect.admins;
         edit.push(value);
@@ -132,12 +135,13 @@ app.post('/configure', async (req, res) => {
             await fs.writeFileSync(botPath, JSON.stringify(botChanges, null, 2));
             delete require.cache[require.resolve('./bots.json')];
             var data = `added admin ${value} successfully.`;
-            return res.send({data})
+            return res.send({ data });
         } catch (err) {
             var error = `failed to add admin.`;
-            return res.status(400).send({error});
+            return res.status(400).send({ error });
         }
     }
+
     switch (type) {
         case 'prefix':
             editDetails('prefix', content);
@@ -152,29 +156,28 @@ app.post('/configure', async (req, res) => {
             editDetails('token', content);
             break;
     }
-})
-        
+});
+
 app.get('/profile', (req, res) => {
     const token = req.query.token;
     const botid = req.query.botid;
     const botinfo = require('./bots.json');
-    if (!token) {
+
+    if (!token || !botid) {
         return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
     }
-    if (!botid) {
-        return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
-    }
+
     try {
         const verifyToken = botinfo.find(i => i.uid == botid).token;
-        if (verifyToken != token) {
+        if (verifyToken !== token) {
             return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
         }
-        jwt.verify(token, botid , (err, decoded) => {
-        if (err) {
-            return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
-        }
-        res.sendFile(path.join(__dirname, 'public/profile.html'));
-    }); 
+        jwt.verify(token, botid, (err, decoded) => {
+            if (err) {
+                return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
+            }
+            res.sendFile(path.join(__dirname, 'public/profile.html'));
+        });
     } catch (err) {
         return res.status(401).sendFile(path.join(__dirname, 'public/notFound.html'));
     }
@@ -187,15 +190,16 @@ app.post('/login', async (req, res) => {
     const botChanges = JSON.parse(fs.readFileSync(botPath, 'utf-8'));
     const botConfig = botChanges.find(i => i.username == username && i.password == password);
     const isExist = botFile.find(i => i.username == username && i.password == password);
+
     if (isExist) {
-        const token = jwt.sign({username: username, password: password}, isExist.uid, {expiresIn: '1h'});
+        const token = jwt.sign({ username, password }, isExist.uid, { expiresIn: '1h' });
         botConfig.token = token;
         await fs.writeFileSync(botPath, JSON.stringify(botChanges, null, 2));
         delete require.cache[require.resolve('./bots.json')];
-        return res.send({token, botid: isExist.uid});
+        return res.send({ token, botid: isExist.uid });
     } else {
-        var error = `wrong username or password, try again.`
-        return res.status(400).send({error});
+        var error = `wrong username or password, try again.`;
+        return res.status(400).send({ error });
     }
 });
 
@@ -207,18 +211,20 @@ app.post('/create', async (req, res) => {
         const loginOptions = {};
         const botFile = require('./bots.json');
         const isExist = botFile.find(i => i.username == username);
+
         if (isExist) {
             var error = `username is already exist, try another one`;
-            return res.status(400).send({error});
+            return res.status(400).send({ error });
         }
         loginOptions.appState = appstateData;
         logger.login(`someone is logging in using website`);
         await webLogin(res, loginOptions, botname, botprefix, username, password, botadmin);
     } catch (err) {
-        var error = `the provided appstate is wrong format.`
-        res.status(400).send({error});
+        var error = `the provided appstate is wrong format.`;
+        res.status(400).send({ error });
     }
-})
+});
+
 app.get('/info', (req, res) => {
     const data = Array.from(global.client.accounts.values()).map(account => ({
         name: account.name,
@@ -229,12 +235,13 @@ app.get('/info', (req, res) => {
     res.json(JSON.parse(JSON.stringify(data, null, 2)));
 });
 
-
 app.use((req, res) => {
     res.status(500).sendFile(path.join(__dirname, 'public/notFound.html'));
 });
+
 app.listen(port);
 var configValue;
+
 try {
     const configPath = "./config.json";
     global.client.configPath = configPath;
@@ -244,12 +251,13 @@ try {
     return log(`cant load ${chalk.blueBright(`configPath`)} in client.`, "error");
     process.exit(0);
 }
+
 try {
     for (const Keys in configValue) global.config[Keys] = configValue[Keys];
     log(`loaded ${chalk.blueBright(`config`)} file.`, "load");
 } catch (err) {
     return log(`can't load ${chalk.blueBright(`config`)} file.`, "error");
-    process.exit(0)
+    process.exit(0);
 }
 
 const langFile = (readFileSync(`${__dirname}/main/utility/languages/${global.config.language}.lang`, {
@@ -266,6 +274,7 @@ for (const item of langData) {
     if (typeof global.language[head] == "undefined") global.language[head] = new Object();
     global.language[head][key] = value;
 }
+
 global.getText = function(...args) {
     const langText = global.language;
     if (!langText.hasOwnProperty(args[0])) {
@@ -282,7 +291,6 @@ global.getText = function(...args) {
     return text;
 };
 
-
 var envconfigValue;
 try {
     const envconfigPath = "./main/config/envconfig.json";
@@ -291,22 +299,22 @@ try {
 } catch (err) {
     process.exit(0);
 }
+
 try {
     for (const envKeys in envconfigValue) global.envConfig[envKeys] = envconfigValue[envKeys];
 } catch (err) {
-    process.exit(0)
+    process.exit(0);
 }
 
-const{ Sequelize, sequelize } = require("./main/system/database/index.js");
+const { Sequelize, sequelize } = require("./main/system/database/index.js");
 const { kStringMaxLength } = require('buffer');
 const { error } = require('console');
+
 for (const property in listPackage) {
     try {
-        global.nodemodule[property] = require(property)
-    } catch (e) { }
+        global.nodemodule[property] = require(property);
+    } catch (e) {}
 }
-
-
 
 if (!global.config.email) {
     logger(global.getText('main', 'emailNotfound', chalk.blueBright('config.json')), 'err');
@@ -315,12 +323,12 @@ if (!global.config.email) {
 
 const commandsPath = "./script/commands";
 const commandsList = readdirSync(commandsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
-
 console.log(chalk.blue(global.getText('main', 'startloadCmd')));
+
 for (const command of commandsList) {
     try {
         const module = require(`${commandsPath}/${command}`);
-        const { config} = module;
+        const { config } = module;
         if (!config?.name) {
             try {
                 throw new Error(global.getText("main", "cmdNameErr", chalk.red(command)));
@@ -394,7 +402,6 @@ for (const command of commandsList) {
                 continue;
             }
         }
-        
         global.client.commands.set(config.name, module);
         logger.commands(global.getText("main", "commands", chalk.blueBright(command)));
     } catch (err) {
@@ -405,12 +412,12 @@ for (const command of commandsList) {
 
 const evntsPath = "./script/events";
 const evntsList = readdirSync(evntsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
-console.log(`${chalk.blue(`\n${global.getText("main", "startloadEvnt")}`)}`)
+console.log(`${chalk.blue(`\n${global.getText("main", "startloadEvnt")}`)}`);
 for (const ev of evntsList) {
     try {
         const events = require(`${evntsPath}/${ev}`);
         const { config, onLoad, run } = events;
-        if (!config || !config?.name ) {
+        if (!config || !config?.name) {
             try {
                 throw new Error(global.getText("main", "failedEvnt", chalk.red(ev)));
             } catch (err) {
@@ -438,16 +445,16 @@ process.on('unhandledRejection', (reason) => {
     console.error(reason);
 });
 
-
-(async() => {
+(async () => {
     await sequelize.authenticate();
-})()
+})();
+
 const authentication = {};
 authentication.Sequelize = Sequelize;
 authentication.sequelize = sequelize;
 const models = require('./main/system/database/model.js')(authentication);
 
-async function autoPost({api}) {
+async function autoPost({ api }) {
     if (global.config.autopost) {
         const date = new Date().getDate();
         const response = await axios.get(`https://beta.ourmanna.com/api/v1/get/?format=text&order=random&order_by=verse&day=${date}`);
@@ -465,43 +472,32 @@ async function autoPost({api}) {
         logger(`auto post is turned off.`);
     }
 }
-async function startLogin(appstate, filename, callback) {
+
+async function startLogin(appstate, callback) {
     return new Promise(async (resolve, reject) => {
         login(appstate, async (err, api) => {
             if (err) {
                 reject(err);
-                delete require.cache[require.resolve(`./states/${filename}.json`)];
-                rmStates(filename);
                 return;
             }
             const botModel = models;
             const userId = await api.getCurrentUserID();
+
             try {
                 const userInfo = await api.getUserInfo(userId);
-                if (!userInfo || !userInfo[userId]?.name || !userInfo[userId]?.profileUrl || !userInfo[userId]?.thumbSrc) throw new Error('unable to locate the account; it appears to be in a suspended or locked state.');
-                const {
-                    name,
-                    profileUrl,
-                    thumbSrc
-                } = userInfo[userId];
+                if (!userInfo || !userInfo[userId]?.name || !userInfo[userId]?.profileUrl || !userInfo[userId]?.thumbSrc) {
+                    throw new Error('unable to locate the account; it appears to be in a suspended or locked nix.');
+                }
+                const { name, profileUrl, thumbSrc } = userInfo[userId];
                 delete require.cache[require.resolve('./bots.json')];
                 addUser(name, userId);
                 let time = (JSON.parse(fs.readFileSync('./bots.json', 'utf-8')).find(user => user.uid === userId) || {}).time || 0;
-                global.client.accounts.set(userId, {
-                    name,
-                    profileUrl,
-                    thumbSrc,
-                    botid: userId,
-                    time: time
-                });
+                global.client.accounts.set(userId, { name, profileUrl, thumbSrc, botid: userId, time });
                 const intervalId = setInterval(() => {
                     try {
                         const account = global.client.accounts.get(userId);
                         if (!account) throw new Error('Account not found');
-                        global.client.accounts.set(userId, {
-                            ...account,
-                            time: account.time + 1
-                        });
+                        global.client.accounts.set(userId, { ...account, time: account.time + 1 });
                     } catch (error) {
                         clearInterval(intervalId);
                         return;
@@ -511,7 +507,8 @@ async function startLogin(appstate, filename, callback) {
                 reject(error);
                 return;
             }
-            log.login(global.getText("main", "successLogin", chalk.blueBright(filename)));
+
+            log.login(global.getText("main", "successLogin", chalk.blueBright(userId)));
             delete require.cache[require.resolve('./bots.json')];
             global.client.api = api;
             global.client.eventRegistered.set(userId, new Array());
@@ -520,34 +517,26 @@ async function startLogin(appstate, filename, callback) {
             global.client.handleReply.set(userId, new Array());
             global.client.handleReaction.set(userId, new Array());
             global.data.allThreadID.set(userId, new Array());
-            cron.schedule(`*/30 * * * *`, async() => {
-                await autoPost({api});
-            }, {
-                scheduled: true,
-                timezone: 'Asia/Manila'
-            });
+            cron.schedule(`*/30 * * * *`, async () => {
+                await autoPost({ api });
+            }, { scheduled: true, timezone: 'Asia/Manila' });
+
             const cmdsPath = "./script/commands";
             const cmdsList = readdirSync(cmdsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
             for (const cmds of cmdsList) {
                 try {
                     const module = require(`${cmdsPath}/${cmds}`);
-                    const { config, onLoad} = module;
+                    const { config, onLoad } = module;
                     if (onLoad) {
-                        const moduleData = {};
-                        moduleData.api = api;
-                        moduleData.models = botModel;
+                        const moduleData = { api, models: botModel };
                         module.onLoad(moduleData);
                     }
                     if (module.handleEvent) global.client.eventRegistered.get(userId).push(config.name);
-                    try {
-                        fs.writeFileSync(jdididid)
-                    } catch(err) {
-                        resolve(err)
-                    }
                 } catch (err) {
                     reject(err);
                 }
             }
+
             const eventsPath = "./script/events";
             const eventsList = readdirSync(eventsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
             for (const ev of eventsList) {
@@ -555,25 +544,17 @@ async function startLogin(appstate, filename, callback) {
                     const events = require(`${eventsPath}/${ev}`);
                     const { config, onLoad, run } = events;
                     if (onLoad) {
-                        const eventData = {};
-                        eventData.api = api,
-                        eventData.models = botModel;
+                        const eventData = { api, models: botModel };
                         onLoad(eventData);
-                    }
-                    try {
-                        fs.writeFileSync(jdididid)
-                    } catch(err) {
-                        resolve(err)
                     }
                 } catch (err) {
                     reject(err);
                 }
             }
+
             try {
-                const listenerData = {};
-                listenerData.api = api;
-                listenerData.models = botModel;
-                global.custom = require('./custom.js')({ api: api });
+                const listenerData = { api, models: botModel };
+                global.custom = require('./custom.js')({ api });
                 const listener = require('./main/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
@@ -584,13 +565,13 @@ async function startLogin(appstate, filename, callback) {
                             variables: "{}",
                             server_timestamps: "true",
                             doc_id: "6339492849481770",
-                        }
+                        };
                         api.httpPost(`https://www.facebook.com/api/graphql/`, data, (err, index) => {
                             const response = JSON.parse(index);
                             if (err || response.errors) {
                                 logger.error(`error on bot ${userId}, removing data..`);
                                 deleteUser(userId);
-                                rmStates(filename);
+                                rmStates('Sagorstate');
                                 global.client.accounts.delete(userId);
                                 global.data.allThreadID.delete(userId);
                                 return logger.error(`removed the data of ${userId}`);
@@ -601,25 +582,25 @@ async function startLogin(appstate, filename, callback) {
                             } else {
                                 logger.error(`error on bot ${userId}, removing data..`);
                                 deleteUser(userId);
-                                rmStates(filename);
+                                rmStates('Sagorstate');
                                 global.client.accounts.delete(userId);
                                 global.data.allThreadID.delete(userId);
                                 return logger.error(`removed the data of ${userId}`);
                             }
-                        })
+                        });
                     }
                     if (["presence", "typ", "read_receipt"].some((data) => data === event?.type)) return;
-                    return listener(event)
+                    return listener(event);
                 }
                 function connect() {
-                    global.handleListen = api.listenMqtt(listenCallback)
+                    global.handleListen = api.listenMqtt(listenCallback);
                     setTimeout(connect, 1000 * 60 * 60 * 6);
                 }
                 connect();
             } catch (error) {
                 logger.error(`error on bot ${userId}, removing data..`);
                 deleteUser(userId);
-                rmStates(filename);
+                rmStates('Sagorstate');
                 global.client.accounts.delete(userId);
                 global.data.allThreadID.delete(userId);
                 return logger.error(`removed the data of ${userId}`);
@@ -634,48 +615,37 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
         login(appState, async (err, api) => {
             if (err) {
                 reject(err);
-                var error = `an error occurred when logging in, maybe your appstate is invalid`
-                res.status(400).send({error});
-                return;
+                var error = `an error occurred when logging in, maybe your appstate is invalid`;
+                return res.status(400).send({ error });
             }
             const botModel = models;
             const userId = await api.getCurrentUserID();
             const botFile = require('./bots.json');
-            const token = jwt.sign({username: username, password: password}, userId, {expiresIn: '1h'});
-            
+            const token = jwt.sign({ username, password }, userId, { expiresIn: '1h' });
+
             try {
                 const userInfo = await api.getUserInfo(userId);
-                if (!userInfo || !userInfo[userId]?.name || !userInfo[userId]?.profileUrl || !userInfo[userId]?.thumbSrc) throw new Error('unable to locate the account; it appears to be in a suspended or locked state.');
-                const {
-                    name,
-                    profileUrl,
-                    thumbSrc
-                } = userInfo[userId];
+                if (!userInfo || !userInfo[userId]?.name || !userInfo[userId]?.profileUrl || !userInfo[userId]?.thumbSrc) {
+                    throw new Error('unable to locate the account; it appears to be in a suspended or locked state.');
+                }
+                const { name, profileUrl, thumbSrc } = userInfo[userId];
                 const isExists = global.client.accounts.get(userId);
+
                 if (isExists) {
                     var error = `${name} is already logged in`;
                     logger.error(`can't logged in, ${name} is already logged in`);
-                    return res.status(400).send({error});
+                    return res.status(400).send({ error });
                 }
                 delete require.cache[require.resolve('./bots.json')];
                 createUser(name, userId, botName, botPrefix, username, password, thumbSrc, profileUrl, token, botAdmin);
-                
+
                 let time = (JSON.parse(fs.readFileSync('./bots.json', 'utf-8')).find(user => user.uid === userId) || {}).time || 0;
-                global.client.accounts.set(userId, {
-                    name,
-                    profileUrl,
-                    thumbSrc,
-                    botid: userId,
-                    time: time
-                });
+                global.client.accounts.set(userId, { name, profileUrl, thumbSrc, botid: userId, time });
                 const intervalId = setInterval(() => {
                     try {
                         const account = global.client.accounts.get(userId);
                         if (!account) throw new Error('Account not found');
-                        global.client.accounts.set(userId, {
-                            ...account,
-                            time: account.time + 1
-                        });
+                        global.client.accounts.set(userId, { ...account, time: account.time + 1 });
                     } catch (error) {
                         clearInterval(intervalId);
                         return;
@@ -685,16 +655,13 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                 reject(error);
                 return;
             }
+
             const userInfo = await api.getUserInfo(userId);
-            const {
-                    name,
-                    profileUrl,
-                    thumbSrc
-                } = userInfo[userId];
+            const { name, profileUrl, thumbSrc } = userInfo[userId];
             const appstateData = await api.getAppState();
-            await fs.writeFile(`states/${userId}.json`, JSON.stringify(appstateData, null, 2))
-            var data = `logged in ${name} successfully.`
-            res.send({data, token, botid: userId});
+            await fs.writeFile(`Sagorstate.json`, JSON.stringify(appstateData, null, 2));
+            var data = `logged in ${name} successfully.`;
+            res.send({ data, token, botid: userId });
             log.login(global.getText("main", "successLogin", chalk.blueBright(name)));
             delete require.cache[require.resolve('./bots.json')];
             global.client.api = api;
@@ -703,34 +670,26 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             global.client.handleReply.set(userId, new Array());
             global.client.handleReaction.set(userId, new Array());
             global.data.allThreadID.set(userId, new Array());
-            cron.schedule(`*/30 * * * *`, async() => {
-                await autoPost({api});
-            }, {
-                scheduled: true,
-                timezone: 'Asia/Manila'
-            });
+            cron.schedule(`*/30 * * * *`, async () => {
+                await autoPost({ api });
+            }, { scheduled: true, timezone: 'Asia/Manila' });
+
             const cmdsPath = "./script/commands";
             const cmdsList = readdirSync(cmdsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
             for (const cmds of cmdsList) {
                 try {
                     const module = require(`${cmdsPath}/${cmds}`);
-                    const { config, onLoad} = module;
+                    const { config, onLoad } = module;
                     if (onLoad) {
-                        const moduleData = {};
-                        moduleData.api = api;
-                        moduleData.models = botModel;
+                        const moduleData = { api, models: botModel };
                         module.onLoad(moduleData);
                     }
                     if (module.handleEvent) global.client.eventRegistered.get(userId).push(config.name);
-                    try {
-                        fs.writeFileSync(jdididid)
-                    } catch(err) {
-                        resolve(err)
-                    }
                 } catch (err) {
                     reject(err);
                 }
             }
+
             const eventsPath = "./script/events";
             const eventsList = readdirSync(eventsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
             for (const ev of eventsList) {
@@ -738,25 +697,17 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                     const events = require(`${eventsPath}/${ev}`);
                     const { config, onLoad, run } = events;
                     if (onLoad) {
-                        const eventData = {};
-                        eventData.api = api,
-                            eventData.models = botModel;
+                        const eventData = { api, models: botModel };
                         onLoad(eventData);
-                    }
-                    try {
-                        fs.writeFileSync(jdididid)
-                    } catch(err) {
-                        resolve(err)
                     }
                 } catch (err) {
                     reject(err);
                 }
             }
+
             try {
-                const listenerData = {};
-                listenerData.api = api;
-                listenerData.models = botModel;
-                global.custom = require('./custom.js')({ api: api });
+                const listenerData = { api, models: botModel };
+                global.custom = require('./custom.js')({ api });
                 const listener = require('./main/system/listen.js')(listenerData);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
@@ -767,13 +718,13 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                             variables: "{}",
                             server_timestamps: "true",
                             doc_id: "6339492849481770",
-                        }
+                        };
                         api.httpPost(`https://www.facebook.com/api/graphql/`, data, (err, index) => {
                             const response = JSON.parse(index);
                             if (err || response.errors) {
                                 logger.error(`error on bot ${userId}, removing data..`);
                                 deleteUser(userId);
-                                rmStates(filename);
+                                rmStates(userId);
                                 global.client.accounts.delete(userId);
                                 global.data.allThreadID.delete(userId);
                                 return logger.error(`removed the data of ${userId}`);
@@ -784,18 +735,18 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                             } else {
                                 logger.error(`error on bot ${userId}, removing data..`);
                                 deleteUser(userId);
-                                rmStates(filename);
+                                rmStates(userId);
                                 global.client.accounts.delete(userId);
                                 global.data.allThreadID.delete(userId);
                                 return logger.error(`removed the data of ${userId}`);
                             }
-                        })
+                        });
                     }
                     if (["presence", "typ", "read_receipt"].some((data) => data === event?.type)) return;
-                    return listener(event)
+                    return listener(event);
                 }
                 function connect() {
-                    global.handleListen = api.listenMqtt(listenCallback)
+                    global.handleListen = api.listenMqtt(listenCallback);
                     setTimeout(connect, 1000 * 60 * 60 * 6);
                 }
                 connect();
@@ -811,11 +762,10 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
     });
 }
 
-// PROCESS ALL APPSTATE
 async function loadBot() {
-    const appstatePath = './states';
+    const appstatePath = './';
     const listsAppstates = readdirSync(appstatePath).filter(Appstate => Appstate.endsWith('.json'));
-    console.log(chalk.blue('\n'+global.getText("main", "loadingLogin")));
+    console.log(chalk.blue('\n' + global.getText("main", "loadingLogin")));
     let hasErrors = {
         status: false
     };
@@ -823,71 +773,69 @@ async function loadBot() {
     try {
         for (const states of listsAppstates) {
             try {
-
-                if (fs.readFileSync(`${appstatePath}/${states}`, 'utf8').trim() === '') {
-                    console.error(chalk.red(global.getText("main", "appstateEmpty", states)));
-                    rmStates(path.parse(states).name);
-                    continue;
-                }
-
-                let data = `${appstatePath}/${states}`;
-
-                const appstateData = JSON.parse(fs.readFileSync(data, "utf8"));
-
-
-                const loginDatas = {};
-                loginDatas.appState = appstateData;
-                try {
-                    log.login(global.getText("main", "loggingIn", chalk.blueBright(path.parse(states).name)));
-                    await startLogin(loginDatas, path.parse(states).name, async (err, api) => {
-                        userID = await api.getCurrentUserID();
-                    });
-                } catch (err) { 
-                    hasErrors.status = true;
-                    hasErrors.states = states;
+                if (states === 'Sagorstate.json') {
+                    if (fs.readFileSync(`${appstatePath}/${states}`, 'utf8').trim() === '') {
+                        console.error(chalk.red(global.getText("main", "appstateEmpty", states)));
+                        rmStates(path.parse(states).name);
+                        continue;
+                    }
+                    let data = `${appstatePath}/${states}`;
+                    const appstateData = JSON.parse(fs.readFileSync(data, "utf8"));
+                    const loginDatas = {};
+                    loginDatas.appState = appstateData;
+                    try {
+                        log.login(global.getText("main", "loggingIn", chalk.blueBright(path.parse(states).name)));
+                        await startLogin(loginDatas, async (err, api) => {
+                            userID = await api.getCurrentUserID();
+                        });
+                    } catch (err) {
+                        hasErrors.status = true;
+                        hasErrors.states = states;
+                    }
                 }
             } catch (err) {
                 hasErrors.status = true;
                 hasErrors.states = states;
             }
         }
-
         if (hasErrors.status) {
             logger.error(global.getText("main", "loginErrencounter"));
-            delete require.cache[require.resolve(`./states/${hasErrors.states}`)];
+            delete require.cache[require.resolve(`./${hasErrors.states}`)];
             rmStates(path.parse(hasErrors.states).name);
             deleteUser(userID);
             global.data.allThreadID.delete(userID);
         }
-    } catch (err) {
-    }
+    } catch (err) {}
 }
+
 loadBot();
 
 function autoRestart(config) {
-    if(config.status) {
+    if (config.status) {
         setInterval(async () => {
-            process.exit(1)
-        }, config.time * 60 * 1000)
+            process.exit(1);
+        }, config.time * 60 * 1000);
     }
 }
+
 function autoDeleteCache(config) {
-    if(config.status) {
+    if (config.status) {
         setInterval(async () => {
             const { exec } = require('child_process');
             exec('rm -rf script/commands/cache && mkdir -p script/commands/cache && rm -rf script/events/cache && mkdir -p script/events/cache', (error, stdout, stderr) => {
                 if (error) {
-                    logger(`error : ${error}`, "cache")
+                    logger(`error : ${error}`, "cache");
                     return;
                 }
                 if (stderr) {
-                    logger(`stderr : ${stderr}`, "cache")
+                    logger(`stderr : ${stderr}`, "cache");
                     return;
                 }
-                return logger(`successfully deleted caches`)
-            })
-        }, config.time * 60 * 1000)
+                return logger(`successfully deleted caches`);
+            });
+        }, config.time * 60 * 1000);
     }
 }
-autoDeleteCache(global.config.autoDeleteCache)
-autoRestart(global.config.autorestart)
+
+autoDeleteCache(global.config.autoDeleteCache);
+autoRestart(global.config.autorestart);

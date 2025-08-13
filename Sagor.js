@@ -1,3 +1,5 @@
+// fixed by ArYAN
+
 const express = require('express');
 const { addUser, rmStates, createUser, deleteUser } = require('./Sagor/system/editconfig.js');
 const log = require("./Sagor/utility/logs.js");
@@ -6,7 +8,7 @@ const axios = require("axios");
 const chalk = require('chalk');
 const { readdirSync, readFileSync, writeFileSync } = require("fs-extra");
 const { join, resolve } = require('path')
-const { execSync, exec } = require('child_process');
+const { execSync, exec } = require('child_child_process');
 const configLog = require('./Sagor/utility/Sagor.json');
 const login = require("./Sagor/system/ws3-fca/index.js");
 const listPackage = JSON.parse(readFileSync('package.json')).dependencies;
@@ -261,15 +263,12 @@ try {
 
 try {
     for (const Keys in configValue) global.config[Keys] = configValue[Keys];
-    
-    // START FIX: Ensure new config keys are available and are arrays if needed
-    global.config.ADMINS = global.config.ADMINS || [];
-    global.config.PREFIX = global.config.PREFIX || "!";
-    global.config.BOTNAME = global.config.BOTNAME || "Sagor-Bot";
     global.config.disabledcmds = global.config.disabledcmds || [];
     global.config.disabledevnts = global.config.disabledevnts || [];
-    // END FIX
-
+    global.config.approvedgroups = global.config.approvedgroups || [];
+    global.config.operators = global.config.operators || [];
+    global.config.ADMINS = global.config.ADMINS || [];
+    global.config.haspremiumcmd = global.config.haspremiumcmd || [];
     log(`loaded ${chalk.blueBright(`config`)} file.`, "load");
 } catch (err) {
     return log(`can't load ${chalk.blueBright(`config`)} file.`, "error");
@@ -338,7 +337,6 @@ if (!global.config.email) {
 }
 
 const commandsPath = "./script/commands";
-// FIX: Using global.config.disabledcmds, which is now an array
 const commandsList = readdirSync(commandsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
 console.log(chalk.blue(global.getText('main', 'startloadCmd')));
 
@@ -428,7 +426,6 @@ for (const command of commandsList) {
 }
 
 const evntsPath = "./script/events";
-// FIX: Using global.config.disabledevnts, which is now an array
 const evntsList = readdirSync(evntsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
 console.log(`${chalk.blue(`\n${global.getText("main", "startloadEvnt")}`)}`);
 for (const ev of evntsList) {
@@ -569,11 +566,10 @@ async function startLogin(appstate, callback) {
                     reject(err);
                 }
             }
-            
+
             try {
                 const listenerData = { api, models: botModel };
                 global.custom = require('./custom.js')({ api });
-                // FIX: Pass the bot prefix and admins to the listener for command handling
                 const listener = require('./Sagor/system/listen.js')(listenerData, global.config.PREFIX, global.config.ADMINS);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
@@ -727,7 +723,6 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             try {
                 const listenerData = { api, models: botModel };
                 global.custom = require('./custom.js')({ api });
-                // FIX: Pass the bot prefix and admins to the listener for command handling
                 const listener = require('./Sagor/system/listen.js')(listenerData, global.config.PREFIX, global.config.ADMINS);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
@@ -744,7 +739,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                             if (err || response.errors) {
                                 logger.error(`error on bot ${userId}, removing data..`);
                                 deleteUser(userId);
-                                rmStates(userId);
+                                rmStates('Sagorstate');
                                 global.client.accounts.delete(userId);
                                 global.data.allThreadID.delete(userId);
                                 return logger.error(`removed the data of ${userId}`);
@@ -755,7 +750,7 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
                             } else {
                                 logger.error(`error on bot ${userId}, removing data..`);
                                 deleteUser(userId);
-                                rmStates(userId);
+                                rmStates('Sagorstate');
                                 global.client.accounts.delete(userId);
                                 global.data.allThreadID.delete(userId);
                                 return logger.error(`removed the data of ${userId}`);
@@ -773,11 +768,165 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             } catch (error) {
                 logger.error(`error on bot ${userId}, removing data..`);
                 deleteUser(userId);
-                rmStates(userId);
+                rmStates('Sagorstate');
                 global.client.accounts.delete(userId);
                 global.data.allThreadID.delete(userId);
                 return logger.error(`removed the data of ${userId}`);
             }
+            callback(null, api);
+        });
+    });
+}
+
+async function webLogin(res, appState, botName, botPrefix, username, password, botAdmin) {
+    return new Promise(async (resolve, reject) => {
+        login(appState, async (err, api) => {
+            if (err) {
+                reject(err);
+                var error = `an error occurred when logging in, maybe your appstate is invalid`;
+                return res.status(400).send({ error });
+            }
+            const botModel = models;
+            const userId = await api.getCurrentUserID();
+            const botFile = require('./bots.json');
+            const token = jwt.sign({ username, password }, userId, { expiresIn: '1h' });
+
+            try {
+                const userInfo = await api.getUserInfo(userId);
+                if (!userInfo || !userInfo[userId]?.name || !userInfo[userId]?.profileUrl || !userInfo[userId]?.thumbSrc) {
+                    throw new Error('unable to locate the account; it appears to be in a suspended or locked state.');
+                }
+                const { name, profileUrl, thumbSrc } = userInfo[userId];
+                const isExists = global.client.accounts.get(userId);
+
+                if (isExists) {
+                    var error = `${name} is already logged in`;
+                    logger.error(`can't logged in, ${name} is already logged in`);
+                    return res.status(400).send({ error });
+                }
+                delete require.cache[require.resolve('./bots.json')];
+                createUser(name, userId, botName, botPrefix, username, password, thumbSrc, profileUrl, token, botAdmin);
+
+                let time = (JSON.parse(fs.readFileSync('./bots.json', 'utf-8')).find(user => user.uid === userId) || {}).time || 0;
+                global.client.accounts.set(userId, { name, profileUrl, thumbSrc, botid: userId, time });
+                const intervalId = setInterval(() => {
+                    try {
+                        const account = global.client.accounts.get(userId);
+                        if (!account) throw new Error('Account not found');
+                        global.client.accounts.set(userId, { ...account, time: account.time + 1 });
+                    } catch (error) {
+                        clearInterval(intervalId);
+                        return;
+                    }
+                }, 1000);
+            } catch (error) {
+                reject(error);
+                return;
+            }
+
+            const userInfo = await api.getUserInfo(userId);
+            const { name, profileUrl, thumbSrc } = userInfo[userId];
+            const appstateData = await api.getAppState();
+            await fs.writeFile(`Sagorstate.json`, JSON.stringify(appstateData, null, 2));
+            var data = `logged in ${name} successfully.`;
+            res.send({ data, token, botid: userId });
+            log.login(global.getText("main", "successLogin", chalk.blueBright(name)));
+            delete require.cache[require.resolve('./bots.json')];
+            global.client.api = api;
+            global.client.eventRegistered.set(userId, new Array());
+            api.setOptions(global.config.loginoptions);
+            global.client.handleReply.set(userId, new Array());
+            global.client.handleReaction.set(userId, new Array());
+            global.data.allThreadID.set(userId, new Array());
+            cron.schedule(`*/30 * * * *`, async () => {
+                await autoPost({ api });
+            }, { scheduled: true, timezone: 'Asia/Manila' });
+
+            const cmdsPath = "./script/commands";
+            const cmdsList = readdirSync(cmdsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
+            for (const cmds of cmdsList) {
+                try {
+                    const module = require(`${cmdsPath}/${cmds}`);
+                    const { config, onLoad } = module;
+                    if (onLoad) {
+                        const moduleData = { api, models: botModel };
+                        module.onLoad(moduleData);
+                    }
+                    if (module.handleEvent) global.client.eventRegistered.get(userId).push(config.name);
+                } catch (err) {
+                    reject(err);
+                }
+            }
+
+            const eventsPath = "./script/events";
+            const eventsList = readdirSync(eventsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
+            for (const ev of eventsList) {
+                try {
+                    const events = require(`${eventsPath}/${ev}`);
+                    const { config, onLoad, run } = events;
+                    if (onLoad) {
+                        const eventData = { api, models: botModel };
+                        onLoad(eventData);
+                    }
+                } catch (err) {
+                    reject(err);
+                }
+            }
+
+            try {
+                const listenerData = { api, models: botModel };
+                global.custom = require('./custom.js')({ api });
+                const listener = require('./Sagor/system/listen.js')(listenerData, global.config.PREFIX, global.config.ADMINS);
+                async function listenCallback(error, event) {
+                    if (JSON.stringify(error).includes('601051028565049')) {
+                        const data = {
+                            av: api.getCurrentUserID(),
+                            fb_api_caller_class: "RelayModern",
+                            fb_api_req_modern_name: "FBScrapingWarningMutation",
+                            variables: "{}",
+                            server_timestamps: "true",
+                            doc_id: "6339492849481770",
+                        };
+                        api.httpPost(`https://www.facebook.com/api/graphql/`, data, (err, index) => {
+                            const response = JSON.parse(index);
+                            if (err || response.errors) {
+                                logger.error(`error on bot ${userId}, removing data..`);
+                                deleteUser(userId);
+                                rmStates('Sagorstate');
+                                global.client.accounts.delete(userId);
+                                global.data.allThreadID.delete(userId);
+                                return logger.error(`removed the data of ${userId}`);
+                            }
+                            if (response.data.fb_scraping_warning_clear.success) {
+                                global.handleListen = api.listenMqtt(listenCallback);
+                                setTimeout(() => (mqttClient.end(), connect()), 1000 * 60 * 60 * 6);
+                            } else {
+                                logger.error(`error on bot ${userId}, removing data..`);
+                                deleteUser(userId);
+                                rmStates('Sagorstate');
+                                global.client.accounts.delete(userId);
+                                global.data.allThreadID.delete(userId);
+                                return logger.error(`removed the data of ${userId}`);
+                            }
+                        });
+                    }
+                    if (["presence", "typ", "read_receipt"].some((data) => data === event?.type)) return;
+                    return listener(event);
+                }
+                function connect() {
+                    global.handleListen = api.listenMqtt(listenCallback);
+                    setTimeout(connect, 1000 * 60 * 60 * 6);
+                }
+                connect();
+            } catch (error) {
+                logger.error(`error on bot ${userId}, removing data..`);
+                deleteUser(userId);
+                rmStates('Sagorstate');
+                global.client.accounts.delete(userId);
+                global.data.allThreadID.delete(userId);
+                return logger.error(`removed the data of ${userId}`);
+            }
+            callback(null, api);
         });
     });
 }
@@ -859,4 +1008,3 @@ function autoDeleteCache(config) {
 
 autoDeleteCache(global.config.autoDeleteCache);
 autoRestart(global.config.autorestart);
-

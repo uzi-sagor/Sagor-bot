@@ -1,27 +1,29 @@
 module.exports.config = {
-  name: "uid",
-  version: "1.0.0",
-  permission: 0,
-  credits: "Mirai Team",
-  description: "Get the user's Facebook UID.",
-  prefix: false,
-  premium: false,
-  category: "without prefix",
-  cooldowns: 5
+    name: "uid",
+    version: "1.5.0",
+    permission: 0,
+    credits: "Sagor",
+    description: "Show UID with username (prefix & no-prefix supported)",
+    prefix: false,
+    premium: false,
+    category: "system",
+    usages: "[reply / mention / self]",
+    cooldowns: 3
 };
 
-module.exports.run = function ({ api, event }) {
-  if (Object.keys(event.mentions).length === 0) {
-    if (event.messageReply) {
-      const senderID = event.messageReply.senderID;
-      return api.shareContact(senderID, event.messageReply.senderID, event.threadID);
-    } else {
-      return api.shareContact(`${event.senderID}`, event.senderID, event.threadID, event.messageID);
+module.exports.run = async function ({ api, event, args }) {
+    const { threadID, messageID, senderID, messageReply } = event;
+
+    let userID = (event.type === "message_reply" && messageReply.senderID) ? messageReply.senderID : (args[0] || senderID);
+
+    try {
+        const userInfo = await api.getUserInfo(userID);
+        const name = userInfo[userID]?.name || "Unknown";
+
+        const msg = `✨🆔 UID INFO 🆔✨\n\n📝 Name : ${name}\n🆔 UID  : ${userID}\n────────────────────────────`;
+
+        return api.sendMessage(msg, threadID, messageID);
+    } catch (e) {
+        return api.sendMessage(`❌ Unable to fetch UID for ${userID}`, threadID, messageID);
     }
-  } else {
-    for (const mentionID in event.mentions) {
-      const mentionName = event.mentions[mentionID];
-      api.shareContact(`${mentionName.replace('@', '')}: ${mentionID}`, mentionName, event.threadID);
-    }
-  }
 };

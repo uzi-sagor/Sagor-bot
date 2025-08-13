@@ -24,7 +24,10 @@ module.exports = function ({api ,models, Users, Threads, Currencies }) {
         }
           
         const notApproved = `this box is not approved.\nuse "${prefix}request" to send a approval request from bot operators`;
-        if (!approvedgroups.includes(threadID) && approval) {
+        
+        const approvedGroups = approvedgroups || [];
+        
+        if (!approvedGroups.includes(threadID) && approval) {
           return api.sendMessage(notApproved, threadID, async (err, info) => {
             if (err) {
               return logger(`can't send the message`, "error")
@@ -35,7 +38,7 @@ module.exports = function ({api ,models, Users, Threads, Currencies }) {
         }
         if (userBanned.has(senderID)|| threadBanned.has(threadID) || allowinbox == ![] && senderID == threadID) return;
         for (const [key, value] of events.entries()) {
-            if (value.config.eventType.indexOf(event.logMessageType) !== -1) {
+            if (value.config && Array.isArray(value.config.eventType) && value.config.eventType.includes(event.logMessageType)) {
                 const eventRun = events.get(key);
                 try {
                     const Obj = {};

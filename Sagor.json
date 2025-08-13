@@ -8,15 +8,15 @@
   "premium": false,
   "autopost": true,
   "adminOnlyMsg": false,
-  "email": "itzaryan.biz@gmail.com",
+  "email": "babygithub@gmail.com",
   "BOTNAME": "Sagor Bot",
   "PREFIX": "-",
   "react": "",
   "OPERATOR": [
-    ""
+    "100048281103451"
   ],
   "ADMINS": [
-    ""
+    "100048281103451"
   ],
   "autorestart": {
     "status": false,

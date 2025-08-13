@@ -1,8 +1,8 @@
 ### ABOUT ME
 
-**Name**: `Ryuko Developer`  
+**Name**: `Sagor deployers`  
 **Age**: `18`  
-**Contact**: [Facebook](https://www.facebook.com/ryukodev)  
+**Contact**: [Facebook](https://www.facebook.com/SAGOR.DJK.FORYOU)  
 
 ---
 
@@ -25,18 +25,17 @@ To set up the project, follow these steps:
 ### SOURCES
 
 - **Original File**: [BotPack](https://replit.com/@YanMaglinte/BotPack?v=1) by `Yan Maglinte`  
-- **Modified Version**: [Ryuko](https://github.com/ryukodeveloper/Ryuko-V4) by `Ryuko Developer`  
 - **FCA Library**: [ws3-fca](https://www.npmjs.com/package/ws3-fca) by `Kenneth Aceberos`  
-- **Latest Version**: [Ryuko V5](https://www.github.com/ryukodeveloper/Ryuko-V5)
+- **Latest Version**: [Sagor-bot](https://www.github.com/ryukodeveloper/Ryuko-V5)
 
 ---
 
 ### UPDATES
 
 - **Configuration**: You can now edit the prefix, bot name, and admins for each bot in the `bots.json` file.
-- **Admin Access Panel**: Configure your admin password in `config.json`.
+- **Admin Access Panel**: Configure your admin password in `Sagor.json`.
 - **App State Creation**: Create your app state files in the `states` folder, with filenames ending in `.json`. You can create multiple app states.
-- **Email Functionality**: Added email notifications for approval requests. Enter your email address in `config.json`.
+- **Email Functionality**: Added email notifications for approval requests. Enter your email address in `Sagor.json`.
 - **Spam Fix**: Resolved issues with spam in the ban system.
 - **Premium Command Feature**: Enable premium features by adding a `premium` variable with a boolean value.
 
@@ -46,7 +45,7 @@ To set up the project, follow these steps:
 module.exports.config = {
   name: "example",
   version: "1.0.0",
-  credits: "Ryuko Developer",
+  credits: "Sagor",
   permission: 0,
   description: "An example command",
   category: "Example",
@@ -65,7 +64,7 @@ module.exports.config = {
 
 ### BOX APPROVAL
 
-The `box approval` feature is enabled by default. To disable it, set the `approval` value to `false` in `config.json`.
+The `box approval` feature is enabled by default. To disable it, set the `approval` value to `false` in `Sagor.json`.
 
 #### Approving Boxes
 
@@ -102,7 +101,7 @@ module.exports.config = {
   name: "example", // Command name
   version: "1.0.0", // Command version
   permission: 0, // Permission level (0: all, 1: group admins, 2: bot admins, 3: bot operators)
-  credits: "Ryuko Developer", // Creator of the code
+  credits: "Sagor", // Creator of the code
   description: "An example command", // Command description
   prefix: false, // Use prefix (true/false)
   premium: false, // Enable premium feature (true/false)
@@ -121,6 +120,6 @@ module.exports.run = async ({ api, event, args, Threads, Users, getText }) => {
 
 #### CONCLUSION
 
-This documentation provides a comprehensive overview of the Ryuko Developer project, including setup instructions, updates, and command usage. If you have any questions or need further assistance, feel free to reach out!
+This documentation provides a comprehensive overview of the Sagor Developer project, including setup instructions, updates, and command usage. If you have any questions or need further assistance, feel free to reach out!
 
 ---

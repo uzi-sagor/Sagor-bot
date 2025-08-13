@@ -6,7 +6,7 @@ module.exports.config = {
   name: "join",
   eventType: ["log:subscribe"],
   version: "1.3.2",
-  credits: "Joy Ahmed (modified by ChatGPT)",
+  credits: "SaGor",
   description: "Send welcome message with image, only name (no tag, no ID)",
   dependencies: {
     "fs-extra": "",
@@ -51,17 +51,17 @@ module.exports.run = async function ({ api, event }) {
     minute: "2-digit"
   });
 
-  const botPicUrl = "https://graph.facebook.com/100001435123762/picture?height=720&width=720&access_token=6628568379%7Cc1e620fa708a1d5696fb991c1bde5662";
-  const botPicPath = path.join(__dirname, "cache", "joinGif", "bot_join.jpg");
+  const driveImageUrl = "https://drive.google.com/uc?export=download&id=1IR02IDIgjGYkt_pHCjF-FrgdsJIT1QKt";
+  const botImagePath = path.join(__dirname, "cache", "joinGif", "bot_join.jpg");
 
-  const driveImageUrl = "https://drive.google.com/uc?export=download&id=1UsliCw3v-qR8V6_fqpuYbPplRKGXIiq8";
+  const driveImageUrl = "https://drive.google.com/uc?export=download&id=1ILe15KqC3kOcEaNnD_euTLy9LIj-CLBO";
   const welcomeImagePath = path.join(__dirname, "cache", "joinGif", "welcome.jpg");
 
   // BOT joined group
   if (event.logMessageData.addedParticipants.some(user => user.userFbId === botID)) {
-    if (!fs.existsSync(botPicPath)) {
+    if (!fs.existsSync(botImagePath)) {
       try {
-        await downloadImage(botPicUrl, botPicPath);
+        await downloadImage(driveImageUrl, botImagePath);
       } catch (e) {
         console.error("Bot profile download error:", e);
       }
@@ -73,12 +73,12 @@ module.exports.run = async function ({ api, event }) {
 `✅ 𝐁𝐨𝐭 𝐂𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲!
 
 ╭╼|━━━━━━━━━━━━━━|╾╮
-👑 𝗔𝗱𝗺𝗶𝗻: 𝙈𝘿 𝙅𝙪𝙗𝙖𝙚𝙙 𝘼𝙝𝙢𝙚𝙙 𝙅𝙤𝙮
-🌐 𝗡𝗮𝗺𝗲: 𝙅𝙤𝙮 𝘼𝙝𝙢𝙚𝙙
-📧 𝗘𝗺𝗮𝗶𝗹: 𝙢𝙙𝙟𝙪𝙗𝙖𝙚𝙙𝙖𝙝𝙢𝙚𝙙124@gmail.com
-📞 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽: +8801709045888
-✈️ 𝗧𝗲𝗹𝗲𝗴𝗿𝗮𝗺: t.me/JOY_AHMED_88
-🔗 𝗙𝗮𝗰𝗲𝗯𝗼𝗼𝗸: fb.com/100001435123762
+👑 𝗔𝗱𝗺𝗶𝗻: 𝐉𝐀𝐇𝐈𝐃𝐔𝐋 𝐈𝐒𝐋𝐀𝐌 𝐒𝐀𝐆𝐎𝐑
+🌐 𝗡𝗮𝗺𝗲: 𝐒𝐀𝐆𝐎𝐑 𝐈𝐒𝐋𝐀𝐌
+📧 𝗘𝗺𝗮𝗶𝗹: babygithub@gmail.com
+📞 𝗪𝗵𝗮𝘁𝘀𝗔𝗽𝗽: +8801611079915
+✈️ 𝗧𝗲𝗹𝗲𝗴𝗿𝗮𝗺: t.me/xxSaGorxx
+🔗 𝗙𝗮𝗰𝗲𝗯𝗼𝗼𝗸: fb.com/SAGOR.DJK.FORYOU
 ⏰ 𝗧𝗶𝗺𝗲: ${currentTime}
 ╰╼|━━━━━━━━━━━━━━|╾╯`;
 
@@ -134,7 +134,7 @@ ${nameList.join("\n")}
 ⏰ 𝓣𝓲𝓶𝓮: ${currentTime}
 
 ╭╼|━━━━━━━━━━━━━━|╾╮
-🤖 𝐅𝐫𝐨𝐦 𝐉𝐎𝐘 𝐀𝐇𝐌𝐄𝐃'𝐬 𝐁𝐎𝐓
+🤖 𝐅𝐫𝐨𝐦 𝐒𝐀𝐆𝐎𝐑 𝐁𝐎𝐓
 ╰╼|━━━━━━━━━━━━━━|╾╯
 `;
 

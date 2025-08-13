@@ -261,6 +261,15 @@ try {
 
 try {
     for (const Keys in configValue) global.config[Keys] = configValue[Keys];
+    
+    // START FIX: Ensure new config keys are available and are arrays if needed
+    global.config.ADMINS = global.config.ADMINS || [];
+    global.config.PREFIX = global.config.PREFIX || "!";
+    global.config.BOTNAME = global.config.BOTNAME || "Sagor-Bot";
+    global.config.disabledcmds = global.config.disabledcmds || [];
+    global.config.disabledevnts = global.config.disabledevnts || [];
+    // END FIX
+
     log(`loaded ${chalk.blueBright(`config`)} file.`, "load");
 } catch (err) {
     return log(`can't load ${chalk.blueBright(`config`)} file.`, "error");
@@ -329,6 +338,7 @@ if (!global.config.email) {
 }
 
 const commandsPath = "./script/commands";
+// FIX: Using global.config.disabledcmds, which is now an array
 const commandsList = readdirSync(commandsPath).filter(command => command.endsWith('.js') && !global.config.disabledcmds.includes(command));
 console.log(chalk.blue(global.getText('main', 'startloadCmd')));
 
@@ -418,6 +428,7 @@ for (const command of commandsList) {
 }
 
 const evntsPath = "./script/events";
+// FIX: Using global.config.disabledevnts, which is now an array
 const evntsList = readdirSync(evntsPath).filter(events => events.endsWith('.js') && !global.config.disabledevnts.includes(events));
 console.log(`${chalk.blue(`\n${global.getText("main", "startloadEvnt")}`)}`);
 for (const ev of evntsList) {
@@ -558,11 +569,12 @@ async function startLogin(appstate, callback) {
                     reject(err);
                 }
             }
-
+            
             try {
                 const listenerData = { api, models: botModel };
                 global.custom = require('./custom.js')({ api });
-                const listener = require('./Sagor/system/listen.js')(listenerData);
+                // FIX: Pass the bot prefix and admins to the listener for command handling
+                const listener = require('./Sagor/system/listen.js')(listenerData, global.config.PREFIX, global.config.ADMINS);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
                         const data = {
@@ -715,7 +727,8 @@ async function webLogin(res, appState, botName, botPrefix, username, password, b
             try {
                 const listenerData = { api, models: botModel };
                 global.custom = require('./custom.js')({ api });
-                const listener = require('./Sagor/system/listen.js')(listenerData);
+                // FIX: Pass the bot prefix and admins to the listener for command handling
+                const listener = require('./Sagor/system/listen.js')(listenerData, global.config.PREFIX, global.config.ADMINS);
                 async function listenCallback(error, event) {
                     if (JSON.stringify(error).includes('601051028565049')) {
                         const data = {
@@ -846,3 +859,4 @@ function autoDeleteCache(config) {
 
 autoDeleteCache(global.config.autoDeleteCache);
 autoRestart(global.config.autorestart);
+

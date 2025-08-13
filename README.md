@@ -123,3 +123,33 @@ module.exports.run = async ({ api, event, args, Threads, Users, getText }) => {
 This documentation provides a comprehensive overview of the Sagor Developer project, including setup instructions, updates, and command usage. If you have any questions or need further assistance, feel free to reach out!
 
 ---
+
+## BOT RUNNING WORKFLOWS 
+```bash
+name: Sagor-Bot
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Sagor-Bot
+        run: npm start
+```

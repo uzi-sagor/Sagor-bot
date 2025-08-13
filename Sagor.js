@@ -20,7 +20,7 @@ const cron = require('node-cron');
 const path = require('path');
 const jwt = require('jsonwebtoken');
 
-const config = require('./config/Sagor.json');
+const config = require('./Sagor.json');
 
 if (config.OWNER[0] !== "100048281103451") {
   console.error("ERROR: OWNER UID has been changed Bot will stop");

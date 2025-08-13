@@ -51,17 +51,18 @@ module.exports.run = async function ({ api, event }) {
     minute: "2-digit"
   });
 
-  const driveImageUrl = "https://drive.google.com/uc?export=download&id=1IR02IDIgjGYkt_pHCjF-FrgdsJIT1QKt";
-  const botImagePath = path.join(__dirname, "cache", "joinGif", "bot_join.jpg");
+  // Image URLs
+  const botDriveUrl = "https://drive.google.com/uc?export=download&id=1IR02IDIgjGYkt_pHCjF-FrgdsJIT1QKt";
+  const welcomeDriveUrl = "https://drive.google.com/uc?export=download&id=1ILe15KqC3kOcEaNnD_euTLy9LIj-CLBO";
 
-  const driveImageUrl = "https://drive.google.com/uc?export=download&id=1ILe15KqC3kOcEaNnD_euTLy9LIj-CLBO";
+  const botImagePath = path.join(__dirname, "cache", "joinGif", "bot_join.jpg");
   const welcomeImagePath = path.join(__dirname, "cache", "joinGif", "welcome.jpg");
 
   // BOT joined group
   if (event.logMessageData.addedParticipants.some(user => user.userFbId === botID)) {
     if (!fs.existsSync(botImagePath)) {
       try {
-        await downloadImage(driveImageUrl, botImagePath);
+        await downloadImage(botDriveUrl, botImagePath);
       } catch (e) {
         console.error("Bot profile download error:", e);
       }
@@ -69,8 +70,7 @@ module.exports.run = async function ({ api, event }) {
 
     await api.changeNickname(`[ ${global.config.PREFIX} ] • ${global.config.BOTNAME || "BOT"}`, threadID, botID);
 
-    const botJoinMsg =
-`✅ 𝐁𝐨𝐭 𝐂𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲!
+    const botJoinMsg = `✅ 𝐁𝐨𝐭 𝐂𝐨𝐧𝐧𝐞𝐜𝐭𝐞𝐝 𝐒𝐮𝐜𝐜𝐞𝐬𝐬𝐟𝐮𝐥𝐥𝐲!
 
 ╭╼|━━━━━━━━━━━━━━|╾╮
 👑 𝗔𝗱𝗺𝗶𝗻: 𝐉𝐀𝐇𝐈𝐃𝐔𝐋 𝐈𝐒𝐋𝐀𝐌 𝐒𝐀𝐆𝐎𝐑
@@ -84,7 +84,7 @@ module.exports.run = async function ({ api, event }) {
 
     return api.sendMessage({
       body: botJoinMsg,
-      attachment: fs.createReadStream(botPicPath)
+      attachment: fs.createReadStream(botImagePath)
     }, threadID);
   }
 
@@ -94,7 +94,7 @@ module.exports.run = async function ({ api, event }) {
 
     if (!fs.existsSync(welcomeImagePath)) {
       try {
-        await downloadImage(driveImageUrl, welcomeImagePath);
+        await downloadImage(welcomeDriveUrl, welcomeImagePath);
       } catch (e) {
         console.error("Welcome image download error:", e);
       }

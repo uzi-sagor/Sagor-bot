@@ -1,6 +1,6 @@
 module.exports.config = {
     name: "emojimix",
-    version: "1.0.1",
+    version: "1.0.2",
     permission: 0,
     credits: "Sagor",
     description: "Mix two emojis together into a sticker",
@@ -12,6 +12,7 @@ module.exports.config = {
 };
 
 const axios = require("axios");
+const API_KEY = "AIzaSyB8qWZ3BAFfHooz5BeJlxEG4lHGiqsS8Ug";
 
 module.exports.run = async function ({ api, event, args }) {
     const { threadID, messageID } = event;
@@ -24,7 +25,7 @@ module.exports.run = async function ({ api, event, args }) {
     const emoji2 = encodeURIComponent(args[1]);
 
     try {
-        const res = await axios.get(`https://tenor.googleapis.com/v2/featured?key=AIzaSyDCv-AtdGXYPI6PjXv0dV7xQh3J2zL4t5s&client_key=emoji_kitchen_fun&collection=emoji_kitchen_v5&contentfilter=high&q=${emoji1}_${emoji2}`);
+        const res = await axios.get(`https://tenor.googleapis.com/v2/featured?key=${API_KEY}&client_key=emoji_kitchen_fun&collection=emoji_kitchen_v5&contentfilter=high&q=${emoji1}_${emoji2}`);
         
         if (!res.data.results || res.data.results.length === 0) {
             return api.sendMessage("❌ No mix found for these emojis.", threadID, messageID);

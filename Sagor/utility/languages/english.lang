@@ -1,6 +1,6 @@
 # main.js
-main.commands=⫷🔥⫸ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒𝐅𝐔𝐋𝐋𝐘 %1 ⫷🔥⫸ 𝐒𝐀𝐆𝐎𝐑 ⫷🔥⫸
-main.events=successfully loaded event %1
+main.commands=⫷🔥⫸ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒𝐅𝐔𝐋𝐋𝐘 𝐂𝐌𝐃 %1 ⫷🔥⫸
+main.events=⫷⚡⫸ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒𝐅𝐔𝐋𝐋𝐘 𝐄𝐕𝐄𝐍𝐓 %1 ⫷⚡⫸
 main.cmderr=can't load command %1, error: %2.
 main.evnterr=can't load event %1, error: %2.
 main.configload=loading %1, file.

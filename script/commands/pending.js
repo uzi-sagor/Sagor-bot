@@ -4,7 +4,7 @@ module.exports.config = {
 	credits: "ryuko",
 	prefix: false,
   premium: false,
-	permission: 2,
+	permission: 0,
 	description: "approve groups",
 	category: "admin",
 	cooldowns: 5

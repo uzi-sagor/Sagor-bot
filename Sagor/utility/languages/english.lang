@@ -1,5 +1,5 @@
 # main.js
-main.commands=⫷🔥⫸ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒𝐅𝐔𝐋𝐋𝐘 𝐂𝐎𝐌𝐌𝐀𝐍𝐃 %1 ⫷🔥⫸ 𝐒𝐀𝐆𝐎𝐑 ⫷🔥⫸
+main.commands=⫷🔥⫸ 𝐒𝐔𝐂𝐂𝐄𝐒𝐒𝐅𝐔𝐋𝐋𝐘 %1 ⫷🔥⫸ 𝐒𝐀𝐆𝐎𝐑 ⫷🔥⫸
 main.events=successfully loaded event %1
 main.cmderr=can't load command %1, error: %2.
 main.evnterr=can't load event %1, error: %2.

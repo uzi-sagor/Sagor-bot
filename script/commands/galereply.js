@@ -48,7 +48,7 @@ react.includes("SawYa") ||
 react.includes("Sawya") || 
 react.includes("tor mare xudi") || react.includes("vuda") || react.includes("heda") || react.includes("bap")) {
 		var msg = {
-				body: "- এখানে গালাগালি করিস না-!!😾"
+				body: "< এখানে গালাগালি করিস না-!!😾"
 			}
 			api.sendMessage(msg, threadID, messageID);
     api.setMessageReaction("🤬", event.messageID, (err) => {}, true)

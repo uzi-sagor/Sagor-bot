@@ -1,4 +1,4 @@
-module.exports = function({ api, models }) {
+Module.exports = function({ api, models }) {
 
 const Users = require("./controllers/users")({ models, api }),
 Threads = require("./controllers/threads")({ models, api }),

@@ -1,9 +1,9 @@
 module.exports.config = {
-  name: "ping",
-  version: "1.0.4",
+  name: "status",
+  version: "1.0.5",
   hasPermssion: 0,
   credits: "SaGor",
-  description: "Check bot response time with stylish bar",
+  description: "Check bot response time with stylish colored bar",
   commandCategory: "user",
   usages: "",
   cooldowns: 5,

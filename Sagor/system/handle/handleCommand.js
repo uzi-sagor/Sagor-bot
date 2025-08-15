@@ -1,4 +1,4 @@
-module.exports = function({ api, models, Users, Threads, Currencies }) {
+Module.exports = function({ api, models, Users, Threads, Currencies }) {
     const stringSimilarity = require('string-similarity'),
       escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
       logger = require("../../utility/logs.js");
@@ -7,7 +7,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
     return async function({ event }) {
       const dateNow = Date.now()
       const time = moment.tz("Asia/Manila").format("HH:MM:ss DD/MM/YYYY");
-    //  const { allowinbox, adminonly, keyAdminOnly } = global.Sagor;
+    
       const { allowinbox, adminonly, developermode, operators, approval, approvedgroups, disabledcmds, disabledevnts } = global.config;
       const bots = require("../../../bots.json");
       const userId = await api.getCurrentUserID();
@@ -34,7 +34,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
       const replyAD = 'mode - only bot admin can use bot';
       const notApproved = `this box is not approved.\nuse "${prefix}request" to send a approval request from bot operators`;
 
-      // FIX: Ensure 'approvedgroups', 'operators', and 'admins' are arrays
+      
       const approvedGroups = approvedgroups || [];
       const botOperators = operators || [];
       const botAdmins = admins || [];
@@ -143,7 +143,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
         }
       }
 
-      // FIX: Ensure 'haspremiumcmd' is an array
+      
       const hasPremiumCmd = global.config.haspremiumcmd || [];
       const premium = global.config.premium;
       if (premium) {
@@ -177,7 +177,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
       }
   
   
-      // FIX: Ensure 'threadAllowNSFW' is an array
+      
       const threadAllowNSFW = global.data.threadAllowNSFW || [];
       if (command && command.config && command.config.category && command.config.category.toLowerCase() === 'nsfw' && !threadAllowNSFW.includes(threadID) && !botAdmins.includes(senderID))
         return api.sendMessage(global.getText("handleCommand", "threadNotAllowNSFW"), threadID, async (err, info) => {
@@ -196,7 +196,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
       var threadInfoo = (threadInfo.get(threadID) || await Threads.getInfo(threadID));
       const Find = threadInfoo.adminIDs.find(el => el.id == senderID);
       const ryuko = '!botOperators.includes(senderID)';
-      // FIX: Use botOperators and botAdmins arrays
+      
       if (botOperators.includes(senderID.toString())) permssion = 3;
       else if (botAdmins.includes(senderID.toString())) permssion = 2;
       else if (!botAdmins.includes(senderID) && ryuko && Find) permssion = 1;

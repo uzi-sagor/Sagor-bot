@@ -1,4 +1,4 @@
-Const express = require('express');
+const express = require('express');
 const { addUser, rmStates, createUser, deleteUser } = require('./Sagor/system/editconfig.js');
 const log = require("./Sagor/utility/logs.js");
 const logger = require("./Sagor/utility/logs.js");

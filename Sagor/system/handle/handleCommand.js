@@ -6,7 +6,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
     const moment = require("moment-timezone");
     return async function({ event }) {
       const dateNow = Date.now()
-      const time = moment.tz("Asia/Manila").format("HH:MM:ss DD/MM/YYYY");
+      const time = moment.tz("Asia/Dhaka").format("HH:MM:ss DD/MM/YYYY");
     
       const { allowinbox, adminonly, developermode, operators, approval, approvedgroups, disabledcmds, disabledevnts } = global.config;
       

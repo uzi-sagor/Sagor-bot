@@ -9,18 +9,12 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
       const time = moment.tz("Asia/Manila").format("HH:MM:ss DD/MM/YYYY");
     
       const { allowinbox, adminonly, developermode, operators, approval, approvedgroups, disabledcmds, disabledevnts } = global.config;
-      const bots = require("../../../bots.json");
+      
       const userId = await api.getCurrentUserID();
-      var prefix;
-      var admins;
-      var botname;
-      try {
-          prefix = bots.find(item => item.uid === userId).prefix;
-          admins = bots.find(item => item.uid === userId).admins;
-          botname = bots.find(item => item.uid === userId).botname;
-      } catch (error) {
-          return api.logout();
-      }
+      var prefix = global.config.PREFIX;
+      var admins = global.config.ADMINS;
+      var botname = global.config.BOTNAME;
+      
       const { userBanned, threadBanned, threadInfo, threadData, commandBanned } = global.data;
       const { commands, cooldowns } = global.client;
       var { body, senderID, threadID, messageID } = event;
@@ -33,7 +27,6 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
       const send = global.send;
       const replyAD = 'mode - only bot admin can use bot';
       const notApproved = `this box is not approved.\nuse "${prefix}request" to send a approval request from bot operators`;
-
       
       const approvedGroups = approvedgroups || [];
       const botOperators = operators || [];
@@ -142,8 +135,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
             }, messageID);
         }
       }
-
-      
+  
       const hasPremiumCmd = global.config.haspremiumcmd || [];
       const premium = global.config.premium;
       if (premium) {
@@ -176,8 +168,6 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
         }
       }
   
-  
-      
       const threadAllowNSFW = global.data.threadAllowNSFW || [];
       if (command && command.config && command.config.category && command.config.category.toLowerCase() === 'nsfw' && !threadAllowNSFW.includes(threadID) && !botAdmins.includes(senderID))
         return api.sendMessage(global.getText("handleCommand", "threadNotAllowNSFW"), threadID, async (err, info) => {

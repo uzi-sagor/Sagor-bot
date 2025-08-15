@@ -30,7 +30,9 @@
     "time": 60,
     "note": "auto delete caches in 1 hour"
   },
-  "OWNER": ["100048281103451"],
+  "OWNER": [
+    "100048281103451"
+  ],
   "APPROVED": [],
   "disabledcmds": [],
   "disabledevents": [],

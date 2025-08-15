@@ -1,4 +1,4 @@
-Const { join, resolve } = require('path');
+const { join, resolve } = require('path');
 const fs = require('fs-extra');
 const chalk = require("chalk");
 const path = require('path');
